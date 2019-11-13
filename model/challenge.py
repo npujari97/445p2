@@ -26,14 +26,26 @@ class Challenge(nn.Module):
 
     def init_weights(self):
         # TODO:
+        for conv in [self.conv1, self.conv2, self.conv3]:
+            C_in = conv.weight.size(1)
+            nn.init.normal_(conv.weight, 0.0, 1 / sqrt(5*5*C_in))
+            nn.init.constant_(conv.bias, 0.0)
 
-        #
+        nn.init.normal_(self.fc1.weight, 0.0, 1 / sqrt(512))
+        nn.init.constant_(self.fc1.bias, 0.0)
+        nn.init.normal_(self.fc2.weight, 0.0, 1 / sqrt(64))
+        nn.init.constant_(self.fc2.bias, 0.0)
+        nn.init.normal_(self.fc3.weight, 0.0, 1 / sqrt(32))
+        nn.init.constant_(self.fc3.bias, 0.0)
+        
 
     def forward(self, x):
         N, C, H, W = x.shape
-
-        # TODO:
-
-        #
-
+        z = F.relu(self.conv1(x))
+        z = F.relu(self.conv2(z))
+        z = F.relu(self.conv3(z))
+        z = z.view(N, 512)
+        z = F.relu(self.fc1(z))
+        z = F.relu(self.fc2(z))
+        z = self.fc3(z)
         return z
