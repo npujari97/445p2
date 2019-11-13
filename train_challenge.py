@@ -22,12 +22,13 @@ def _train_epoch(data_loader, model, criterion, optimizer):
     # TODO: complete the training step
     for i, (X, y) in enumerate(data_loader):
         # clear parameter gradients
-        ???
-        #
+        optimizer.zero_grad()
 
         # forward + backward + optimize
-        ???
-        #
+        output = model(X)
+        loss = criterion(output, y)
+        loss.backward()
+        optimizer.step()
     #
 
 def _evaluate_epoch(axes, tr_loader, val_loader, model, criterion, epoch, stats):
@@ -69,9 +70,11 @@ def main():
         num_classes=config('challenge.num_classes'))
 
     # TODO: define model, loss function, and optimizer
-    model = ???
-    criterion = ???
-    optimizer = ???
+    model = Challenge()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(params=model.parameters(), lr = 0.0001)
     #
 
     # Attempts to restore the latest checkpoint if exists
