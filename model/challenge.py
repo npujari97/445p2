@@ -8,6 +8,7 @@ Challenge
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from math import sqrt
 
 class Challenge(nn.Module):
     def __init__(self):
